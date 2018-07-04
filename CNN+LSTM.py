@@ -4,7 +4,7 @@ from __future__ import division
 from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
-from osgeo import gdal
+from osgeo import gdal #for openning BIL format image 
 from keras.layers import Dense, Conv1D, Input, MaxPooling1D, Flatten, Dropout, LSTM
 from keras import Sequential
 from keras.utils import np_utils
@@ -47,18 +47,20 @@ def train():
     x_test = x_test.reshape(row*col, bands, 1)
     values = []
     c_l = {}
-    
+    # assigning class to every training file
     for add in path:
         c = int(input())
         print("{} class {} ".format(add, c))
         c_l[add] = c
     clicks={}
+    # calculation of clicks in every training file
     for address in path:
         with open('train1'+address, "rb") as f:
             k = len(f.read())
             clicks[address] = (k // 2 // bands) if (k // 2 // bands) < 400 else (k // 2 // bands) // 4
             print('{} ==> {}'.format(address, clicks[address]))
-             
+    
+    # reading data in training files in binary form
     for address in path:
         with open('train1'+address, "rb") as f:
             b = array.array("H")
