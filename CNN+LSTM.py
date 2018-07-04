@@ -14,7 +14,7 @@ import sys
 import os
 
 gdal.GetDriverByName('EHdr').Register()
-img = gdal.Open("apex17bnads")
+img = gdal.Open("apex17bands")
 b = img.RasterCount
 col = img.RasterXSize
 row = img.RasterYSize
@@ -43,7 +43,7 @@ def train():
     path = os.listdir("train1")
     pixels = row * col
     y_test = np.zeros([row * col], dtype=np.uint16)
-    x_test = ReadBilFile("apex17bnads", bands, pixels)
+    x_test = ReadBilFile("apex17bands", bands, pixels)
     x_test = x_test.reshape(row*col, bands, 1)
     values = []
     c_l = {}
@@ -54,13 +54,13 @@ def train():
         c_l[add] = c
     clicks={}
     for address in path:
-        with open(address, "rb") as f:
+        with open('train1'+address, "rb") as f:
             k = len(f.read())
             clicks[address] = (k // 2 // bands) if (k // 2 // bands) < 400 else (k // 2 // bands) // 4
             print('{} ==> {}'.format(address, clicks[address]))
              
     for address in path:
-        with open(address, "rb") as f:
+        with open('train1'+address, "rb") as f:
             b = array.array("H")
             b.fromfile(f, clicks[address]*bands)
             if sys.byteorder == "little":
